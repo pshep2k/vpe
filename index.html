@@ -788,6 +788,119 @@
     }
   }
 
+
+
+  /* Mobile v2: use the browser page as the scroll container.
+     This avoids iOS/Safari snapping/bounce issues with nested fixed-height slide scrolling. */
+  @media (max-width: 820px) {
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      height: auto !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+      position: static !important;
+      overscroll-behavior-y: auto !important;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
+    }
+
+    body {
+      display: block;
+      padding: 0;
+      padding-bottom: calc(92px + env(safe-area-inset-bottom));
+      min-height: 100dvh;
+    }
+
+    #hint { display: none; }
+
+    #deck {
+      position: relative !important;
+      inset: auto !important;
+      width: 100% !important;
+      min-height: 100dvh !important;
+      height: auto !important;
+      overflow: visible !important;
+      display: block !important;
+      padding: 10px 10px 0 !important;
+    }
+
+    .slide,
+    .slide.cover {
+      position: relative !important;
+      left: auto !important;
+      top: auto !important;
+      transform: none !important;
+      width: 100% !important;
+      max-width: 430px !important;
+      height: auto !important;
+      min-height: calc(100dvh - 112px) !important;
+      max-height: none !important;
+      overflow: visible !important;
+      margin: 0 auto !important;
+      display: none;
+    }
+
+    .slide.active { display: flex !important; }
+
+    .slide-body {
+      height: auto !important;
+      min-height: 0 !important;
+      overflow: visible !important;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar {
+      min-height: 166px;
+      padding: 24px 18px 18px;
+      overflow: hidden;
+    }
+
+    .sidebar-title {
+      max-width: calc(100% - 142px) !important;
+      padding-right: 0;
+    }
+
+    .sidebar-sub {
+      max-width: calc(100% - 134px) !important;
+      padding-right: 0 !important;
+    }
+
+    .sidebar-logo-img {
+      right: 18px !important;
+      top: 24px !important;
+      width: 96px !important;
+      max-width: 96px !important;
+    }
+
+    .main {
+      flex: 0 0 auto !important;
+      overflow: visible !important;
+      padding-bottom: 52px !important;
+    }
+
+    .cover-body {
+      min-height: calc(100dvh - 112px);
+    }
+
+    #nav {
+      position: fixed !important;
+      z-index: 9999 !important;
+      bottom: max(12px, env(safe-area-inset-bottom)) !important;
+      left: 12px !important;
+      right: 12px !important;
+      width: auto !important;
+      transform: none !important;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .sidebar-title { max-width: calc(100% - 126px) !important; }
+    .sidebar-sub { max-width: calc(100% - 120px) !important; }
+    .sidebar-logo-img { width: 88px !important; max-width: 88px !important; right: 16px !important; }
+  }
+
 </style>
 </head>
 <body>
@@ -1168,6 +1281,9 @@
     current = n;
     slides[current].classList.add('active');
     slides[current].scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    window.scrollTo(0, 0);
     dotRow.children[current].classList.add('active');
     document.getElementById('slide-counter').textContent = (current + 1) + ' / ' + total;
     document.getElementById('prev-btn').disabled = current === 0;
